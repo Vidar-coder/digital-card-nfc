@@ -2,7 +2,7 @@
 
 import { ArrowRight, CheckCircle2, Circle, Contact, Eye, MessageCircle, Palette, QrCode, Share2, Tag } from "lucide-react";
 import Link from "next/link";
-import { HeroDigitalCard } from "@/components/landing/hero-digital-card";
+import { UserDigitalCardPreview } from "@/components/dashboard/user-digital-card-preview";
 import { Card, CardHeader } from "@/components/ui/card";
 import { buttonClasses } from "@/components/ui/button";
 import { profileCompletion } from "@/lib/completion";
@@ -56,7 +56,7 @@ export function Overview({ summary }: { summary: AnalyticsSummary }) {
             </a>
           </div>
           <div className="flex justify-center lg:justify-end">
-            <HeroDigitalCard username={saved.username} compact showCaption={false} />
+            <UserDigitalCardPreview compact showCaption={false} />
           </div>
         </div>
       </Card>

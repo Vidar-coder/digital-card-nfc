@@ -16,6 +16,30 @@ const BRAND_INDIGO = "#4f46e5";
 /** Example profile encoded in the preview QR (same link pattern as live cards). */
 const PREVIEW_USERNAME = "yourname";
 
+export type DigitalCardProfile = {
+  username: string;
+  fullName?: string;
+  title?: string;
+  company?: string;
+  location?: string;
+  /** QR module color (defaults to brand indigo). */
+  qrColor?: string;
+};
+
+const PLACEHOLDER = {
+  name: "Your Name",
+  title: "Your Title",
+  meta: "Company · City",
+};
+
+function resolveCardCopy(profile?: DigitalCardProfile) {
+  const name = profile?.fullName?.trim() || PLACEHOLDER.name;
+  const title = profile?.title?.trim() || PLACEHOLDER.title;
+  const metaParts = [profile?.company?.trim(), profile?.location?.trim()].filter(Boolean);
+  const meta = metaParts.length ? metaParts.join(" · ") : PLACEHOLDER.meta;
+  return { name, title, meta };
+}
+
 function CardLuxurySurface({ mirrored = false }: { mirrored?: boolean }) {
   return (
     <>
@@ -45,7 +69,7 @@ function CardLuxurySurface({ mirrored = false }: { mirrored?: boolean }) {
   );
 }
 
-function CardFront() {
+function CardFront({ copy }: { copy: ReturnType<typeof resolveCardCopy> }) {
   return (
     <div className="relative h-full w-full overflow-hidden text-white">
       <CardLuxurySurface />
@@ -67,12 +91,18 @@ function CardFront() {
             <p
               className="truncate text-[22px] font-normal leading-none tracking-tight text-white sm:text-2xl"
               style={{ fontFamily: "var(--font-playfair)" }}
+              title={copy.name}
             >
-              Your Name
+              {copy.name}
             </p>
-            <p className="mt-2.5 truncate text-[13px] font-medium tracking-wide text-white/90">Your Title</p>
-            <p className="mt-1 truncate text-[11px] uppercase tracking-[0.16em] text-[#e8dcc0]/80">
-              Company · City
+            <p className="mt-2.5 truncate text-[13px] font-medium tracking-wide text-white/90" title={copy.title}>
+              {copy.title}
+            </p>
+            <p
+              className="mt-1 truncate text-[11px] uppercase tracking-[0.16em] text-[#e8dcc0]/80"
+              title={copy.meta}
+            >
+              {copy.meta}
             </p>
           </div>
           <div className="hidden shrink-0 text-right sm:block">
@@ -94,7 +124,17 @@ function CardFront() {
   );
 }
 
-function CardBack({ qrUrl, displayUrl }: { qrUrl: string; displayUrl: string }) {
+function CardBack({
+  qrUrl,
+  displayUrl,
+  qrColor,
+  copy,
+}: {
+  qrUrl: string;
+  displayUrl: string;
+  qrColor: string;
+  copy: ReturnType<typeof resolveCardCopy>;
+}) {
   return (
     <div className="relative h-full w-full overflow-hidden text-white">
       <CardLuxurySurface mirrored />
@@ -103,13 +143,14 @@ function CardBack({ qrUrl, displayUrl }: { qrUrl: string; displayUrl: string }) 
         <div className="flex min-w-0 flex-1 flex-col justify-center">
           <p className="text-[8px] font-semibold uppercase tracking-[0.28em] text-[#e8dcc0]/70">Profile</p>
           <p
-            className="mt-1.5 text-base font-normal leading-tight text-white"
+            className="mt-1.5 truncate text-base font-normal leading-tight text-white"
             style={{ fontFamily: "var(--font-playfair)" }}
+            title={copy.name}
           >
-            Scan to connect
+            {copy.name}
           </p>
           <p className="mt-2 text-[10px] leading-relaxed text-white/75">
-            Same link as NFC—portfolio, contact, and socials in one place.
+            Scan to connect—same link as NFC. Portfolio, contact, and socials in one place.
           </p>
           <p className="mt-3 truncate font-mono text-[9px] text-[#e8dcc0]/55" title={qrUrl}>
             {displayUrl}
@@ -124,7 +165,7 @@ function CardBack({ qrUrl, displayUrl }: { qrUrl: string; displayUrl: string }) 
 
         <div className="flex shrink-0 flex-col items-center justify-center">
           <div className="rounded-lg bg-white/95 p-2 shadow-[0_12px_32px_-12px_rgba(0,0,0,0.55)] backdrop-blur-sm">
-            <QRCode value={qrUrl} size={76} color={BRAND_INDIGO} background="#ffffff" className="size-[76px]" />
+            <QRCode value={qrUrl} size={76} color={qrColor} background="#ffffff" className="size-[76px]" />
           </div>
           <p className="mt-2 text-center text-[8px] font-semibold uppercase tracking-[0.22em] text-[#e8dcc0]/65">
             Scan
@@ -152,22 +193,27 @@ function useCardSize(maxWidth = CARD_WIDTH, minWidth = 280) {
 }
 
 type HeroDigitalCardProps = {
-  /** Profile username for the back QR (defaults to preview placeholder). */
+  /** @deprecated Prefer `profile.username`. */
   username?: string;
-  /** Tighter layout for dashboard and narrow columns. */
+  profile?: DigitalCardProfile;
   compact?: boolean;
   showCaption?: boolean;
 };
 
 export function HeroDigitalCard({
   username,
+  profile,
   compact = false,
   showCaption = true,
 }: HeroDigitalCardProps) {
   const maxW = compact ? 340 : CARD_WIDTH;
   const { width, height } = useCardSize(maxW, compact ? 260 : 280);
 
-  const qrUrl = useMemo(() => profileUrl(username ?? PREVIEW_USERNAME, "qr"), [username]);
+  const resolvedUsername = profile?.username ?? username ?? PREVIEW_USERNAME;
+  const copy = useMemo(() => resolveCardCopy(profile), [profile]);
+  const qrColor = profile?.qrColor ?? BRAND_INDIGO;
+
+  const qrUrl = useMemo(() => profileUrl(resolvedUsername, "qr"), [resolvedUsername]);
   const displayUrl = useMemo(() => {
     try {
       const u = new URL(qrUrl);
@@ -197,8 +243,8 @@ export function HeroDigitalCard({
           stiffness={180}
           damping={22}
           className="mx-auto"
-          front={<CardFront />}
-          back={<CardBack qrUrl={qrUrl} displayUrl={displayUrl} />}
+          front={<CardFront copy={copy} />}
+          back={<CardBack qrUrl={qrUrl} displayUrl={displayUrl} qrColor={qrColor} copy={copy} />}
         />
       </div>
       {showCaption ? (
