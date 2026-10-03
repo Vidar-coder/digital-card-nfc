@@ -135,26 +135,39 @@ function CardBack({ qrUrl, displayUrl }: { qrUrl: string; displayUrl: string }) 
   );
 }
 
-function useCardSize(maxWidth = CARD_WIDTH) {
+function useCardSize(maxWidth = CARD_WIDTH, minWidth = 280) {
   const [width, setWidth] = useState(maxWidth);
 
   useEffect(() => {
     const update = () => {
       const pad = 40;
-      setWidth(Math.min(maxWidth, Math.max(280, window.innerWidth - pad)));
+      setWidth(Math.min(maxWidth, Math.max(minWidth, window.innerWidth - pad)));
     };
     update();
     window.addEventListener("resize", update);
     return () => window.removeEventListener("resize", update);
-  }, [maxWidth]);
+  }, [maxWidth, minWidth]);
 
   return { width, height: Math.round(width / 1.586) };
 }
 
-export function HeroDigitalCard() {
-  const { width, height } = useCardSize();
+type HeroDigitalCardProps = {
+  /** Profile username for the back QR (defaults to preview placeholder). */
+  username?: string;
+  /** Tighter layout for dashboard and narrow columns. */
+  compact?: boolean;
+  showCaption?: boolean;
+};
 
-  const qrUrl = useMemo(() => profileUrl(PREVIEW_USERNAME, "qr"), []);
+export function HeroDigitalCard({
+  username,
+  compact = false,
+  showCaption = true,
+}: HeroDigitalCardProps) {
+  const maxW = compact ? 340 : CARD_WIDTH;
+  const { width, height } = useCardSize(maxW, compact ? 260 : 280);
+
+  const qrUrl = useMemo(() => profileUrl(username ?? PREVIEW_USERNAME, "qr"), [username]);
   const displayUrl = useMemo(() => {
     try {
       const u = new URL(qrUrl);
@@ -165,7 +178,7 @@ export function HeroDigitalCard() {
   }, [qrUrl]);
 
   return (
-    <div className="flex w-full flex-col items-center lg:min-w-[400px]">
+    <div className={`flex w-full flex-col items-center ${compact ? "min-w-0" : "lg:min-w-[400px]"}`}>
       <div className="shadow-[0_32px_64px_-28px_rgba(15,15,30,0.5)]" style={{ width }}>
         <FlipCard
           ariaLabel="Interactive digital business card preview — click or drag to flip"
@@ -188,9 +201,11 @@ export function HeroDigitalCard() {
           back={<CardBack qrUrl={qrUrl} displayUrl={displayUrl} />}
         />
       </div>
-      <p className="mt-5 max-w-sm text-center text-sm leading-relaxed text-zinc-600">
-        A refined digital card—flip to reveal your profile QR, matched to every NFC tap.
-      </p>
+      {showCaption ? (
+        <p className="mt-5 max-w-sm text-center text-sm leading-relaxed text-zinc-600">
+          Flip to preview—the QR on the back matches your live profile link.
+        </p>
+      ) : null}
     </div>
   );
 }

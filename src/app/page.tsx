@@ -17,11 +17,9 @@ import Link from "next/link";
 import { BrandMark } from "@/components/brand-mark";
 import { HeroDigitalCard } from "@/components/landing/hero-digital-card";
 import { buttonClasses } from "@/components/ui/button";
-import { SITE_NAME } from "@/lib/config";
+import { DIGITAL_CARD_PROMO_PRICE, MESSENGER_ORDER_URL, SITE_NAME } from "@/lib/config";
 
 const PORTFOLIO_URL = "https://lance28-beep.github.io/portfolio-website/";
-const MESSENGER_URL = "https://m.me/mr.c0oletz";
-const PROMO_PRICE = "₱1,499";
 
 const STEPS = [
   {
@@ -132,7 +130,7 @@ function SectionIntro({ label, title, description }: { label: string; title: str
 function MessengerCta({ size = "lg", className }: { size?: "md" | "lg"; className?: string }) {
   return (
     <a
-      href={MESSENGER_URL}
+      href={MESSENGER_ORDER_URL}
       target="_blank"
       rel="noopener noreferrer"
       className={buttonClasses("primary", size, className)}
@@ -189,7 +187,7 @@ export default function Home() {
                     <Tag className="size-3" aria-hidden />
                     Promo
                   </span>
-                  <p className="mt-2 text-3xl font-semibold tracking-tight text-zinc-950">{PROMO_PRICE}</p>
+                  <p className="mt-2 text-3xl font-semibold tracking-tight text-zinc-950">{DIGITAL_CARD_PROMO_PRICE}</p>
                   <p className="mt-1 text-sm text-zinc-600">Digital card setup · NFC-ready profile · QR included</p>
                 </div>
                 <MessengerCta className="shrink-0 px-6 sm:ml-auto" />
@@ -306,7 +304,7 @@ export default function Home() {
 
         <section className="mx-auto max-w-3xl px-5 py-16 text-center sm:py-20">
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">Limited promo</p>
-          <p className="mt-3 text-4xl font-semibold tracking-tight text-zinc-950">{PROMO_PRICE}</p>
+          <p className="mt-3 text-4xl font-semibold tracking-tight text-zinc-950">{DIGITAL_CARD_PROMO_PRICE}</p>
           <p className="mx-auto mt-3 max-w-lg text-base leading-relaxed text-zinc-600">
             Get your digital business card set up with NFC profile, QR, and a dashboard you can update anytime.
           </p>
@@ -336,16 +334,16 @@ export default function Home() {
           </a>
         </p>
         <p className="mx-auto mt-3 max-w-md px-5">
-          Order your digital card — promo {PROMO_PRICE}.{" "}
+          Order your digital card — promo {DIGITAL_CARD_PROMO_PRICE}.{" "}
           <a
-            href={MESSENGER_URL}
+            href={MESSENGER_ORDER_URL}
             target="_blank"
             rel="noopener noreferrer"
             className="font-medium text-zinc-800 underline-offset-4 hover:underline"
           >
             Message us on Messenger
           </a>
-          <span className="mt-1 block text-xs text-zinc-500">{MESSENGER_URL}</span>
+          <span className="mt-1 block text-xs text-zinc-500">{MESSENGER_ORDER_URL}</span>
         </p>
       </footer>
     </div>

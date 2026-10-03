@@ -33,3 +33,7 @@ export function profileUrl(username: string, source?: "qr" | "nfc"): string {
 
 /** Public setup guide links. */
 export const APPS_SCRIPT_GUIDE_PATH = "/setup";
+
+/** Order / support (landing + dashboard CTA). */
+export const MESSENGER_ORDER_URL = "https://m.me/mr.c0oletz";
+export const DIGITAL_CARD_PROMO_PRICE = "₱1,499";

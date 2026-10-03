@@ -1,9 +1,12 @@
 "use client";
 
-import { ArrowRight, CheckCircle2, Circle, Contact, Eye, Palette, QrCode, Share2 } from "lucide-react";
+import { ArrowRight, CheckCircle2, Circle, Contact, Eye, MessageCircle, Palette, QrCode, Share2, Tag } from "lucide-react";
 import Link from "next/link";
+import { HeroDigitalCard } from "@/components/landing/hero-digital-card";
 import { Card, CardHeader } from "@/components/ui/card";
+import { buttonClasses } from "@/components/ui/button";
 import { profileCompletion } from "@/lib/completion";
+import { DIGITAL_CARD_PROMO_PRICE, MESSENGER_ORDER_URL } from "@/lib/config";
 import type { AnalyticsSummary } from "@/lib/types";
 import { CompletionRing } from "./completion-ring";
 import { useDashboard } from "./dashboard-context";
@@ -29,6 +32,34 @@ export function Overview({ summary }: { summary: AnalyticsSummary }) {
         <h1 className="text-2xl font-semibold tracking-tight text-zinc-900">Welcome back, {first} 👋</h1>
         <p className="mt-1 text-sm text-zinc-500">Here&apos;s how your digital card is doing this week.</p>
       </div>
+
+      <Card className="overflow-hidden border-indigo-100 bg-gradient-to-br from-white via-white to-indigo-50/40 p-0">
+        <div className="grid gap-6 p-5 lg:grid-cols-[1fr_auto] lg:items-center lg:p-6">
+          <div className="min-w-0">
+            <span className="inline-flex items-center gap-1.5 rounded-full bg-brand/10 px-2.5 py-0.5 text-xs font-semibold uppercase tracking-wide text-brand">
+              <Tag className="size-3" aria-hidden />
+              Promo {DIGITAL_CARD_PROMO_PRICE}
+            </span>
+            <h2 className="mt-3 text-lg font-semibold text-zinc-900">Order a digital card</h2>
+            <p className="mt-2 max-w-md text-sm leading-relaxed text-zinc-600">
+              Get an NFC-ready physical card linked to your profile—the same tap, QR, and save-contact flow you
+              manage here.
+            </p>
+            <a
+              href={MESSENGER_ORDER_URL}
+              target="_blank"
+              rel="noopener noreferrer"
+              className={buttonClasses("primary", "md", "mt-4 inline-flex")}
+            >
+              <MessageCircle className="size-4" aria-hidden />
+              Message me
+            </a>
+          </div>
+          <div className="flex justify-center lg:justify-end">
+            <HeroDigitalCard username={saved.username} compact showCaption={false} />
+          </div>
+        </div>
+      </Card>
 
       <div className="grid grid-cols-2 gap-3 sm:grid-cols-4">
         {stats.map((s) => (
