@@ -3,7 +3,13 @@ import { notFound } from "next/navigation";
 import { ProfileView } from "@/components/profile/profile-view";
 import { ProfileViewTracker } from "@/components/profile/profile-view-tracker";
 import { ServiceWorkerRegistrar } from "@/components/profile/sw-registrar";
-import { profileUrl, SITE_NAME } from "@/lib/config";
+import {
+  getLinkPreviewImageUrl,
+  linkPreviewImageAlt,
+  LINK_PREVIEW_IMAGE_SIZE,
+  profileUrl,
+  SITE_NAME,
+} from "@/lib/config";
 import { getPublicProfile } from "@/lib/data";
 import { sanitizeRichText, stripHtml } from "@/lib/sanitize";
 import { DEFAULT_THEME } from "@/lib/theme";
@@ -45,8 +51,21 @@ export async function generateMetadata(props: PageProps<"/p/[username]">): Promi
       firstName: profile.full_name.split(" ")[0],
       lastName: profile.full_name.split(" ").slice(1).join(" ") || undefined,
       username: profile.username,
+      images: [
+        {
+          url: getLinkPreviewImageUrl(),
+          width: LINK_PREVIEW_IMAGE_SIZE.width,
+          height: LINK_PREVIEW_IMAGE_SIZE.height,
+          alt: linkPreviewImageAlt(),
+        },
+      ],
     },
-    twitter: { card: "summary_large_image", title, description },
+    twitter: {
+      card: "summary_large_image",
+      title,
+      description,
+      images: [getLinkPreviewImageUrl()],
+    },
     appleWebApp: { capable: true, title: profile.full_name, statusBarStyle: "black-translucent" },
     other: { "profile:username": profile.username },
   };

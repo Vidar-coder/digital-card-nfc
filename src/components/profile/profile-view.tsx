@@ -72,14 +72,26 @@ export function ProfileView({ profile, preview, className }: Props) {
             <EducationSection education={profile.education} certifications={profile.certifications} />
             <ContactSection profile={profile} preview={preview} />
 
-            <footer className="py-6 text-center text-xs text-p-muted">
+            <footer className="space-y-2 py-8 text-center text-xs leading-relaxed text-p-muted">
               {preview ? (
-                <span>Digital card by {SITE_NAME}</span>
+                <p>Want a digital card and page like this? Visit {SITE_NAME}.</p>
               ) : (
-                <Link href="/" className="hover:text-p-primary">
-                  Digital card by {SITE_NAME}
-                </Link>
+                <p>
+                  Want a digital card and page like this?{" "}
+                  <Link href="/" className="font-medium text-p-primary underline-offset-2 hover:underline">
+                    Get started on {SITE_NAME}
+                  </Link>
+                </p>
               )}
+              <p>
+                {preview ? (
+                  <span>Powered by {SITE_NAME}</span>
+                ) : (
+                  <Link href="/" className="hover:text-p-primary">
+                    Digital card by {SITE_NAME}
+                  </Link>
+                )}
+              </p>
             </footer>
           </main>
         </div>

@@ -19,11 +19,11 @@ export const isRegistrationOpen = process.env.ALLOW_REGISTRATION !== "false";
 
 export const SITE_NAME = process.env.NEXT_PUBLIC_SITE_NAME ?? "TapCard";
 
+/** Public site origin for profile links, QR, vCard, and social previews (not from env). */
+export const CANONICAL_SITE_URL = "https://digital-card-nfc.vercel.app";
+
 export function getSiteUrl(): string {
-  const url =
-    process.env.NEXT_PUBLIC_SITE_URL ??
-    (process.env.VERCEL_URL ? `https://${process.env.VERCEL_URL}` : "http://localhost:3000");
-  return url.replace(/\/$/, "");
+  return CANONICAL_SITE_URL;
 }
 
 export function profileUrl(username: string, source?: "qr" | "nfc"): string {
@@ -37,3 +37,16 @@ export const APPS_SCRIPT_GUIDE_PATH = "/setup";
 /** Order / support (landing + dashboard CTA). */
 export const MESSENGER_ORDER_URL = "https://m.me/mr.c0oletz";
 export const DIGITAL_CARD_PROMO_PRICE = "₱1,499";
+
+/** Default link preview (public/LinkPreviewImage.png). */
+export const LINK_PREVIEW_IMAGE_PATH = "/LinkPreviewImage.png";
+export const LINK_PREVIEW_IMAGE_SIZE = { width: 1734, height: 907 } as const;
+
+export function linkPreviewImageAlt(siteName = SITE_NAME): string {
+  return `${siteName} — NFC digital business cards`;
+}
+
+/** Absolute URL for Open Graph / Twitter / Messenger crawlers. */
+export function getLinkPreviewImageUrl(): string {
+  return `${CANONICAL_SITE_URL}${LINK_PREVIEW_IMAGE_PATH}`;
+}
