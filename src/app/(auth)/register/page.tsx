@@ -1,7 +1,7 @@
 import type { Metadata } from "next";
 import Link from "next/link";
 import { AuthForm } from "@/components/auth/auth-form";
-import { getSiteUrl, isBackendConfigured, isRegistrationOpen } from "@/lib/config";
+import { DIGITAL_CARD_PROMO_PRICE, getSiteUrl, isBackendConfigured, isRegistrationOpen, MESSENGER_ORDER_URL } from "@/lib/config";
 import * as sheets from "@/lib/sheets/api";
 import { registerAction } from "../actions";
 
@@ -22,8 +22,9 @@ export default async function RegisterPage() {
   if (!isRegistrationOpen && !firstAccount) {
     return (
       <>
-        <h1 className="text-2xl font-semibold tracking-tight">Sign-up is invite-only</h1>
-        <p className="mt-2 text-sm text-zinc-600">
+        <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">Create account</p>
+        <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-950">Sign-up is invite-only</h1>
+        <p className="mt-2 text-sm leading-relaxed text-zinc-600">
           Accounts are created by an administrator. If you received an invite email, use its link to set your password.
         </p>
         <Link href="/login" className="mt-6 inline-block text-sm font-medium text-brand hover:underline">
@@ -41,36 +42,48 @@ export default async function RegisterPage() {
           card and dashboard.
         </div>
       )}
-      <h1 className="text-2xl font-semibold tracking-tight">Create your digital card</h1>
-      <p className="mb-8 mt-1 text-sm text-zinc-500">Free to start. Takes less than two minutes.</p>
+      <p className="text-xs font-semibold uppercase tracking-[0.18em] text-brand">Get started</p>
+      <h1 className="mt-2 text-2xl font-semibold tracking-tight text-zinc-950 sm:text-3xl">Create your account</h1>
+      <p className="mb-8 mt-2 text-sm leading-relaxed text-zinc-600">
+        Build your digital business card profile in minutes. Ordered NFC with us? Use the email we confirmed—then customize
+        everything in your dashboard.
+      </p>
       <AuthForm
         action={registerAction}
         submitLabel="Create account"
         fields={[
-          { name: "full_name", label: "Full name", autoComplete: "name" },
+          { name: "full_name", label: "Full name", autoComplete: "name", placeholder: "Rolando S. Valle" },
           {
             name: "username",
             label: "Username",
             autoComplete: "username",
             placeholder: "yourname",
-            hint: `Your card URL: ${host}/p/yourname`,
+            hint: `Your public card: ${host}/p/yourname`,
           },
-          { name: "email", label: "Email", type: "email", autoComplete: "email" },
+          { name: "email", label: "Email", type: "email", autoComplete: "email", placeholder: "you@company.com" },
           {
             name: "password",
             label: "Password",
             type: "password",
             autoComplete: "new-password",
-            hint: "8+ characters with a letter and a number",
+            hint: "At least 8 characters with a letter and a number",
           },
         ]}
         footer={
-          <p className="text-center text-sm text-zinc-600">
-            Already have an account?{" "}
-            <Link href="/login" className="font-medium text-brand hover:underline">
-              Sign in
-            </Link>
-          </p>
+          <div className="space-y-4 pt-1">
+            <p className="text-center text-sm text-zinc-600">
+              Already have an account?{" "}
+              <Link href="/login" className="font-medium text-brand hover:underline">
+                Sign in
+              </Link>
+            </p>
+            <p className="rounded-xl border border-indigo-100 bg-indigo-50/60 px-3 py-2.5 text-center text-xs leading-relaxed text-zinc-700">
+              Need the physical NFC card? Promo {DIGITAL_CARD_PROMO_PRICE} —{" "}
+              <a href={MESSENGER_ORDER_URL} target="_blank" rel="noopener noreferrer" className="font-medium text-brand hover:underline">
+                message us now
+              </a>
+            </p>
+          </div>
         }
       />
     </>
