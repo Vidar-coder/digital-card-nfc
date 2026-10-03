@@ -1,0 +1,141 @@
+@import "tailwindcss";
+
+/* ---------------------------------------------------------------------------
+   App (dashboard / auth) design tokens
+   --------------------------------------------------------------------------- */
+:root {
+  --background: #f7f7f8;
+  --foreground: #0f1115;
+  --brand: #4f46e5;
+}
+
+@theme inline {
+  --color-background: var(--background);
+  --color-foreground: var(--foreground);
+  --color-brand: var(--brand);
+  --font-sans: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+
+  /* Profile theme tokens (set per profile via themeToStyle()) */
+  --color-p-primary: var(--p-primary);
+  --color-p-secondary: var(--p-secondary);
+  --color-p-accent: var(--p-accent);
+  --color-p-bg: var(--p-bg);
+  --color-p-text: var(--p-text);
+  --color-p-muted: var(--p-muted);
+  --color-p-surface: var(--p-surface);
+  --color-p-border: var(--p-border);
+  --color-p-button: var(--p-button);
+  --color-p-button-text: var(--p-button-text);
+}
+
+html {
+  -webkit-tap-highlight-color: transparent;
+}
+
+body {
+  background: var(--background);
+  color: var(--foreground);
+  font-family: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+/* ---------------------------------------------------------------------------
+   Public profile theming
+   --------------------------------------------------------------------------- */
+.profile-root {
+  --p-muted: color-mix(in srgb, var(--p-text) 64%, var(--p-bg));
+  --p-surface: color-mix(in srgb, var(--p-text) 4%, var(--p-bg));
+  --p-border: color-mix(in srgb, var(--p-text) 11%, transparent);
+  --p-card-bg: color-mix(in srgb, var(--p-bg) 30%, white);
+  --p-card-shadow: 0 1px 2px rgb(15 17 21 / 0.04), 0 8px 24px -12px rgb(15 17 21 / 0.12);
+  background: var(--p-bg);
+  color: var(--p-text);
+  font-family: var(--p-font-body);
+}
+
+.profile-root[data-mode="dark"] {
+  --p-card-bg: color-mix(in srgb, var(--p-text) 5%, var(--p-bg));
+  --p-card-shadow: 0 1px 2px rgb(0 0 0 / 0.3), 0 12px 32px -16px rgb(0 0 0 / 0.6);
+}
+
+.profile-root .font-heading {
+  font-family: var(--p-font-heading);
+}
+
+.p-card {
+  border-radius: var(--p-radius);
+  background: var(--p-card-bg);
+  transition: border-color 0.2s, box-shadow 0.2s, transform 0.2s;
+}
+.profile-root[data-card="elevated"] .p-card {
+  box-shadow: var(--p-card-shadow);
+  border: 1px solid color-mix(in srgb, var(--p-text) 5%, transparent);
+}
+.profile-root[data-card="outlined"] .p-card {
+  background: transparent;
+  border: 1px solid var(--p-border);
+}
+.profile-root[data-card="flat"] .p-card {
+  background: var(--p-surface);
+  border: 1px solid transparent;
+}
+.profile-root[data-card="glass"] .p-card {
+  background: color-mix(in srgb, var(--p-text) 6%, transparent);
+  border: 1px solid color-mix(in srgb, var(--p-text) 12%, transparent);
+  -webkit-backdrop-filter: blur(18px) saturate(140%);
+  backdrop-filter: blur(18px) saturate(140%);
+}
+
+.p-btn {
+  border-radius: min(var(--p-radius), 14px);
+}
+
+.p-prose p { margin: 0 0 0.85em; }
+.p-prose p:last-child { margin-bottom: 0; }
+.p-prose ul, .p-prose ol { margin: 0.25em 0 0.85em; padding-left: 1.2em; }
+.p-prose ul { list-style: disc; }
+.p-prose ol { list-style: decimal; }
+.p-prose li { margin: 0.2em 0; }
+.p-prose li::marker { color: var(--p-primary); }
+.p-prose a { color: var(--p-primary); text-decoration: underline; text-underline-offset: 3px; }
+.p-prose strong { font-weight: 600; color: var(--p-text); }
+.p-prose h3, .p-prose h4 { font-family: var(--p-font-heading); font-weight: 600; margin: 1em 0 0.4em; }
+.p-prose blockquote { border-left: 3px solid var(--p-primary); padding-left: 0.9em; font-style: italic; }
+
+/* Subtle entrance — disabled for users who prefer reduced motion */
+@keyframes rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to { opacity: 1; transform: none; }
+}
+.animate-rise {
+  animation: rise 0.5s cubic-bezier(0.2, 0.7, 0.2, 1) both;
+}
+@media (prefers-reduced-motion: reduce) {
+  .animate-rise { animation: none; }
+  .p-card { transition: none; }
+}
+
+/* ---------------------------------------------------------------------------
+   Rich text editor (dashboard)
+   --------------------------------------------------------------------------- */
+.rte .ProseMirror {
+  min-height: 220px;
+  outline: none;
+  padding: 0.9rem 1rem;
+}
+.rte .ProseMirror p { margin: 0 0 0.75em; }
+.rte .ProseMirror ul { list-style: disc; padding-left: 1.3em; margin-bottom: 0.75em; }
+.rte .ProseMirror ol { list-style: decimal; padding-left: 1.3em; margin-bottom: 0.75em; }
+.rte .ProseMirror h3 { font-size: 1.1rem; font-weight: 600; margin: 0.8em 0 0.4em; }
+.rte .ProseMirror a { color: var(--brand); text-decoration: underline; }
+.rte .ProseMirror blockquote { border-left: 3px solid #d4d4d8; padding-left: 0.8em; color: #52525b; }
+.rte .ProseMirror p.is-editor-empty:first-child::before {
+  content: attr(data-placeholder);
+  color: #a1a1aa;
+  float: left;
+  height: 0;
+  pointer-events: none;
+}
+
+.scrollbar-thin { scrollbar-width: thin; }
