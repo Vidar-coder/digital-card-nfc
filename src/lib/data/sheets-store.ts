@@ -101,9 +101,19 @@ export const sheetsStore = {
   },
 
   async updateTheme(userId: string, theme: Theme) {
+    const payload = themeToSheet(theme);
     try {
-      await sheets.updateTheme(userId, themeToSheet(theme));
+      await sheets.updateTheme(userId, payload);
     } catch (e) {
+      if (
+        e instanceof AppsScriptError &&
+        e.code === "VALIDATION_ERROR" &&
+        e.fieldErrors?.theme_name &&
+        payload.theme_name !== "custom"
+      ) {
+        await sheets.updateTheme(userId, { ...payload, theme_name: "custom" });
+        return;
+      }
       rethrow(e, "theme");
     }
   },

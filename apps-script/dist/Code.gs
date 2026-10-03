@@ -668,7 +668,10 @@ function coerce_(col, raw) {
     }
     case 'enum': {
       const s = String(raw).trim().toLowerCase();
-      return col.values.indexOf(s) >= 0 ? { value: s } : { error: capitalize_(label) + ' must be one of: ' + col.values.join(', ') };
+      if (col.values.indexOf(s) >= 0) return { value: s };
+      // New theme presets may arrive before ENUMS / sheet dropdowns are updated — keep colors, store as custom.
+      if (col.name === 'theme_name' && col.values.indexOf('custom') >= 0) return { value: 'custom' };
+      return { error: capitalize_(label) + ' must be one of: ' + col.values.join(', ') };
     }
     case 'bool': {
       if (raw === true || raw === 'true' || raw === 1 || raw === '1' || raw === 'TRUE') return { value: true };

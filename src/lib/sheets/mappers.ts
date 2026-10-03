@@ -1,4 +1,11 @@
-import { DEFAULT_THEME, isHexColor, normalizeHexColor, THEME_PRESETS } from "../theme";
+import {
+  DEFAULT_THEME,
+  isHexColor,
+  normalizeHexColor,
+  resolveThemePreset,
+  THEME_PRESETS,
+  themeNameForSheet,
+} from "../theme";
 import type {
   AnalyticsEvent,
   AnalyticsEventType,
@@ -129,8 +136,8 @@ function sheetPreset(name: string | undefined): Theme["preset"] {
 
 export function themeFromSheet(t: SheetTheme | null | undefined): Theme {
   if (!t) return { ...DEFAULT_THEME };
-  return {
-    preset: sheetPreset(t.theme_name),
+  const theme: Theme = {
+    preset: t.theme_name === "custom" ? "custom" : sheetPreset(t.theme_name),
     mode: t.mode || DEFAULT_THEME.mode,
     primary: sheetColor(t.primary_color, DEFAULT_THEME.primary),
     secondary: sheetColor(t.secondary_color, DEFAULT_THEME.secondary),
@@ -143,6 +150,7 @@ export function themeFromSheet(t: SheetTheme | null | undefined): Theme {
     font: t.font_family || DEFAULT_THEME.font,
     avatar_shape: t.profile_image_style || DEFAULT_THEME.avatar_shape,
   };
+  return { ...theme, preset: resolveThemePreset(theme) };
 }
 
 export const listFromSheet = {
@@ -234,6 +242,10 @@ export function themeToSheet(theme: Theme): ThemeInput {
   const colorKeys = new Set(["primary", "secondary", "accent", "background", "text", "button"]);
   for (const [key, col] of Object.entries(THEME_FIELD_MAP)) {
     let v = theme[key as keyof Theme];
+    if (key === "preset") {
+      out[col] = themeNameForSheet(theme.preset);
+      continue;
+    }
     if (colorKeys.has(key) && typeof v === "string" && isHexColor(v)) v = normalizeHexColor(v);
     out[col] = v;
   }

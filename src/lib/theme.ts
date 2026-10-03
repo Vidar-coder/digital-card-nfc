@@ -229,6 +229,46 @@ export const THEME_PRESET_GROUPS: { label: string; ids: ThemePresetId[] }[] = [
 
 export const DEFAULT_THEME: Theme = THEME_PRESETS.glass.theme;
 
+/** Presets added after the original sheet enum — stored as `custom` until the sheet API & validation are redeployed. */
+export const EXTENDED_THEME_PRESET_IDS = new Set<ThemePresetId>([
+  "executive",
+  "midnight",
+  "slate",
+  "luxury",
+  "navy",
+]);
+
+/** Maps app preset → `theme_name` column (extended presets persist as `custom` + colors). */
+export function themeNameForSheet(preset: Theme["preset"]): Theme["preset"] {
+  if (preset === "custom") return "custom";
+  if (EXTENDED_THEME_PRESET_IDS.has(preset as ThemePresetId)) return "custom";
+  return preset;
+}
+
+/** When the sheet only has `custom`, match colors/style back to a known preset for the dashboard UI. */
+export function resolveThemePreset(theme: Theme): Theme["preset"] {
+  if (theme.preset !== "custom") return theme.preset;
+  for (const id of Object.keys(THEME_PRESETS) as ThemePresetId[]) {
+    const ref = THEME_PRESETS[id].theme;
+    if (
+      ref.mode === theme.mode &&
+      ref.primary === theme.primary &&
+      ref.secondary === theme.secondary &&
+      ref.accent === theme.accent &&
+      ref.background === theme.background &&
+      ref.text === theme.text &&
+      ref.button === theme.button &&
+      ref.card_style === theme.card_style &&
+      ref.radius === theme.radius &&
+      ref.font === theme.font &&
+      ref.avatar_shape === theme.avatar_shape
+    ) {
+      return id;
+    }
+  }
+  return "custom";
+}
+
 export const FONT_OPTIONS: { id: FontId; label: string; cssVar: string }[] = [
   { id: "inter", label: "Inter", cssVar: "var(--font-inter)" },
   { id: "jakarta", label: "Plus Jakarta Sans", cssVar: "var(--font-jakarta)" },
