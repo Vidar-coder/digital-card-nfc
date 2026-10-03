@@ -36,12 +36,12 @@ interface Props {
 function MobileThumbBar({ profile, preview, docked }: { profile: FullProfile; preview?: boolean; docked?: boolean }) {
   const tel = phoneHref(profile.phone);
   return (
-    <div className={cn("z-20 @4xl:hidden", docked ? "shrink-0" : "sticky bottom-0")}>
+    <div className={cn("mobile-action-bar z-20 @4xl:hidden", docked ? "shrink-0" : "sticky bottom-0")}>
       <div
-        className="mx-auto flex max-w-xl gap-2 border-t border-p-border px-3 pt-3 backdrop-blur-xl"
+        className="mx-auto flex max-w-xl gap-2 border-t border-p-border/90 px-4 pt-3"
         style={{
-          background: "color-mix(in srgb, var(--p-bg) 82%, transparent)",
-          paddingBottom: docked ? "0.5rem" : "max(0.75rem, env(safe-area-inset-bottom))",
+          background: "color-mix(in srgb, var(--p-bg) 88%, transparent)",
+          paddingBottom: docked ? "0.375rem" : "max(0.875rem, env(safe-area-inset-bottom))",
         }}
       >
         <SaveContactButton username={profile.username} preview={preview} className="flex-1" />
@@ -71,10 +71,10 @@ function MobileThumbBar({ profile, preview, docked }: { profile: FullProfile; pr
         )}
       </div>
       {docked ? (
-        <div className="flex justify-center pb-2 pt-1" aria-hidden>
+        <div className="flex justify-center pb-2.5 pt-1.5" aria-hidden>
           <div
-            className="h-1 w-[36%] min-w-[100px] max-w-[128px] rounded-full"
-            style={{ background: "color-mix(in srgb, var(--p-text) 35%, transparent)" }}
+            className="h-[5px] w-[34%] min-w-[108px] max-w-[134px] rounded-full"
+            style={{ background: "color-mix(in srgb, var(--p-text) 42%, transparent)" }}
           />
         </div>
       ) : null}
@@ -89,11 +89,12 @@ export function ProfileView({ profile, preview, phonePreview, className }: Props
     <div
       className={cn(
         "profile-root @container relative isolate overflow-x-clip",
-        phonePreview ? "flex h-full min-h-0 flex-col" : "min-h-full",
+        phonePreview ? "flex h-full min-h-0 flex-col" : "min-h-dvh",
         className,
       )}
       data-mode={theme.mode}
       data-card={theme.card_style}
+      data-phone-preview={phonePreview ? "" : undefined}
       style={themeToStyle(theme)}
     >
       {theme.card_style === "glass" && (
@@ -106,24 +107,24 @@ export function ProfileView({ profile, preview, phonePreview, className }: Props
 
       <div
         className={cn(
-          "mx-auto w-full max-w-6xl px-3 pt-3 pb-6 @md:px-5 @md:pt-6 @4xl:px-8 @4xl:pt-12 @4xl:pb-16",
+          "profile-scroll mx-auto w-full max-w-6xl px-4 pt-4 pb-8 @md:px-5 @md:pt-6 @md:pb-10 @4xl:px-8 @4xl:pt-12 @4xl:pb-16",
           phonePreview &&
-            "min-h-0 flex-1 overflow-y-auto overflow-x-hidden pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+            "min-h-0 flex-1 overflow-y-auto overflow-x-hidden pb-3 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
         )}
       >
         <div className="@4xl:grid @4xl:grid-cols-[380px_minmax(0,1fr)] @4xl:items-start @4xl:gap-8">
           {/* Identity card — the "business card" */}
           <aside className="@4xl:sticky @4xl:top-8">
-            <div className="p-card animate-rise overflow-hidden">
+            <div className="p-card p-card-identity animate-rise overflow-hidden">
               <ProfileHeader profile={profile} preview={preview} />
-              <div className="space-y-5 p-5 pt-6 @md:p-6">
+              <div className="space-y-5 p-5 pt-5 @md:p-6 @md:pt-6">
                 <ContactButtons profile={profile} preview={preview} />
                 <SocialLinks links={profile.social_links} username={profile.username} preview={preview} />
               </div>
             </div>
           </aside>
 
-          <main className="mt-3 space-y-3 @md:mt-4 @md:space-y-4 @4xl:mt-0">
+          <main className="mt-4 space-y-3.5 @md:mt-5 @md:space-y-4 @4xl:mt-0">
             <AboutSection html={profile.about_html} />
             <ServicesSection services={profile.services} />
             <ExperienceSection items={profile.experiences} />

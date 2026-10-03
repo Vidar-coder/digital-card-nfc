@@ -1,6 +1,6 @@
 import { Globe, Mail, MessageSquare, Phone } from "lucide-react";
 import type { FullProfile } from "@/lib/types";
-import { ensureProtocol, phoneHref } from "@/lib/utils";
+import { cn, ensureProtocol, phoneHref } from "@/lib/utils";
 import { SaveContactButton } from "./save-contact-button";
 import { TrackedLink } from "./tracked-link";
 
@@ -46,7 +46,11 @@ export function ContactButtons({ profile, preview }: Props) {
 
   return (
     <div className="space-y-3">
-      <SaveContactButton username={profile.username} preview={preview} className="w-full text-base" />
+      <SaveContactButton
+        username={profile.username}
+        preview={preview}
+        className={cn("hidden w-full text-base @4xl:flex")}
+      />
       {actions.length > 0 && (
         <div className="grid gap-2" style={{ gridTemplateColumns: `repeat(${Math.min(actions.length, 4)}, minmax(0, 1fr))` }}>
           {actions.map((a) => (

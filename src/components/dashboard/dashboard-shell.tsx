@@ -81,13 +81,13 @@ export function DashboardShell({ children }: { children: ReactNode }) {
           </div>
         </div>
 
-        <div className={cn("lg:pl-64", showPreview && "2xl:pr-[440px]")}>
+        <div className={cn("lg:pl-64", showPreview && "2xl:pr-[480px]")}>
           <main className="mx-auto w-full max-w-3xl px-4 py-6 sm:px-6 lg:py-10">{children}</main>
         </div>
 
         {/* Desktop live preview */}
         {showPreview && (
-          <aside className="fixed inset-y-0 right-0 z-20 hidden w-[440px] border-l border-zinc-200 bg-zinc-100/70 2xl:block">
+          <aside className="fixed inset-y-0 right-0 z-20 hidden w-[480px] border-l border-zinc-200/90 bg-zinc-50 2xl:block">
             <LivePreview />
           </aside>
         )}
@@ -107,16 +107,16 @@ export function DashboardShell({ children }: { children: ReactNode }) {
         {previewOpen && (
           <div className="fixed inset-0 z-50 2xl:hidden" role="dialog" aria-modal="true" aria-label="Live preview">
             <div className="absolute inset-0 bg-zinc-950/50" onClick={() => setPreviewOpen(false)} />
-            <div className="absolute inset-x-0 bottom-0 top-6 rounded-t-3xl bg-zinc-100 shadow-2xl sm:inset-y-4 sm:left-auto sm:right-4 sm:w-[440px] sm:rounded-3xl">
+            <div className="absolute inset-0 flex flex-col bg-zinc-100 sm:inset-4 sm:left-auto sm:max-w-[480px] sm:rounded-2xl sm:shadow-2xl sm:ring-1 sm:ring-zinc-900/5">
               <button
                 type="button"
                 onClick={() => setPreviewOpen(false)}
-                className="absolute -top-3 left-1/2 z-10 -translate-x-1/2 rounded-full bg-white p-1.5 text-zinc-700 shadow-md sm:left-auto sm:right-3 sm:top-3 sm:translate-x-0"
+                className="absolute right-3 top-3 z-10 rounded-full bg-white/95 p-2 text-zinc-700 shadow-md backdrop-blur-sm hover:bg-white"
                 aria-label="Close preview"
               >
                 <X className="size-4" />
               </button>
-              <LivePreview />
+              <LivePreview className="pt-10 sm:pt-0" />
             </div>
           </div>
         )}

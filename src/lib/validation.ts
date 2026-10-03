@@ -1,4 +1,5 @@
 import { z } from "zod";
+import { normalizeHexColor } from "./theme";
 import { ensureProtocol, RESERVED_USERNAMES, USERNAME_REGEX } from "./utils";
 
 const trimmed = (max: number) => z.string().trim().max(max, `Must be ${max} characters or fewer`);
@@ -14,7 +15,10 @@ const nullableUrl = z.preprocess(
   z.url({ protocol: /^https?$/, message: "Enter a valid URL" }).nullable(),
 );
 
-const hexColor = z.string().regex(/^#([0-9a-f]{3}|[0-9a-f]{6})$/i, "Use a hex color like #4f46e5");
+const hexColor = z.preprocess(
+  (v) => (typeof v === "string" ? normalizeHexColor(v.trim()) : v),
+  z.string().regex(/^#[0-9a-f]{6}$/i, "Use a hex color like #4f46e5"),
+);
 
 export const usernameSchema = z
   .string()
@@ -124,7 +128,21 @@ export const listSchemas = {
 } as const;
 
 export const themeSchema = z.object({
-  preset: z.enum(["minimal", "corporate", "elegant", "modern", "dark", "glass", "creative", "custom"]),
+  preset: z.enum([
+    "minimal",
+    "corporate",
+    "elegant",
+    "modern",
+    "dark",
+    "glass",
+    "creative",
+    "executive",
+    "midnight",
+    "slate",
+    "luxury",
+    "navy",
+    "custom",
+  ]),
   mode: z.enum(["light", "dark"]),
   primary: hexColor,
   secondary: hexColor,

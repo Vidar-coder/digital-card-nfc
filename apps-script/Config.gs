@@ -76,7 +76,10 @@ const ENUMS = {
   ],
   PROFICIENCY: ['beginner', 'intermediate', 'advanced', 'expert'],
   CONTACT_ACTION_TYPES: ['phone', 'sms', 'email', 'website', 'location', 'whatsapp', 'custom'],
-  THEME_NAMES: ['minimal', 'corporate', 'elegant', 'modern', 'dark', 'glass', 'creative', 'custom'],
+  THEME_NAMES: [
+    'minimal', 'corporate', 'elegant', 'modern', 'dark', 'glass', 'creative',
+    'executive', 'midnight', 'slate', 'luxury', 'navy', 'custom',
+  ],
   FONTS: ['inter', 'jakarta', 'grotesk', 'manrope', 'playfair', 'lora'],
   CARD_STYLES: ['elevated', 'outlined', 'flat', 'glass'],
   IMAGE_STYLES: ['circle', 'rounded', 'square'],

@@ -128,7 +128,104 @@ export const THEME_PRESETS: Record<ThemePresetId, { label: string; description: 
       avatar_shape: "rounded",
     },
   },
+  executive: {
+    label: "Executive",
+    description: "Charcoal, gold accents—boardroom ready",
+    theme: {
+      preset: "executive",
+      mode: "dark",
+      primary: "#e8dcc0",
+      secondary: "#c9a227",
+      accent: "#8b7355",
+      background: "#141414",
+      text: "#f3f0ea",
+      button: "#c9a227",
+      card_style: "glass",
+      radius: 12,
+      font: "playfair",
+      avatar_shape: "circle",
+    },
+  },
+  midnight: {
+    label: "Midnight",
+    description: "Deep navy, crisp cyan highlights",
+    theme: {
+      preset: "midnight",
+      mode: "dark",
+      primary: "#e2e8f0",
+      secondary: "#38bdf8",
+      accent: "#6366f1",
+      background: "#0f172a",
+      text: "#e2e8f0",
+      button: "#0284c7",
+      card_style: "outlined",
+      radius: 14,
+      font: "jakarta",
+      avatar_shape: "rounded",
+    },
+  },
+  slate: {
+    label: "Slate",
+    description: "Cool gray—consulting & tech",
+    theme: {
+      preset: "slate",
+      mode: "light",
+      primary: "#334155",
+      secondary: "#64748b",
+      accent: "#0d9488",
+      background: "#f1f5f9",
+      text: "#0f172a",
+      button: "#334155",
+      card_style: "elevated",
+      radius: 10,
+      font: "inter",
+      avatar_shape: "rounded",
+    },
+  },
+  luxury: {
+    label: "Luxury",
+    description: "Onyx & champagne—premium personal brand",
+    theme: {
+      preset: "luxury",
+      mode: "dark",
+      primary: "#f5e6c8",
+      secondary: "#d4af37",
+      accent: "#a78bfa",
+      background: "#0c0a09",
+      text: "#fafaf9",
+      button: "#b8860b",
+      card_style: "glass",
+      radius: 18,
+      font: "lora",
+      avatar_shape: "circle",
+    },
+  },
+  navy: {
+    label: "Navy Pro",
+    description: "Classic navy & white—finance & law",
+    theme: {
+      preset: "navy",
+      mode: "light",
+      primary: "#1e3a5f",
+      secondary: "#2563eb",
+      accent: "#dc2626",
+      background: "#ffffff",
+      text: "#1e293b",
+      button: "#1e3a5f",
+      card_style: "outlined",
+      radius: 8,
+      font: "jakarta",
+      avatar_shape: "square",
+    },
+  },
 };
+
+/** Preset picker groupings in the dashboard Appearance tab. */
+export const THEME_PRESET_GROUPS: { label: string; ids: ThemePresetId[] }[] = [
+  { label: "Professional", ids: ["corporate", "executive", "navy", "slate", "minimal"] },
+  { label: "Dark & luxury", ids: ["glass", "luxury", "midnight", "dark"] },
+  { label: "Modern & creative", ids: ["modern", "elegant", "creative"] },
+];
 
 export const DEFAULT_THEME: Theme = THEME_PRESETS.glass.theme;
 
@@ -166,6 +263,16 @@ export function readableOn(hex: string): string {
 
 export function isHexColor(v: string): boolean {
   return /^#([0-9a-f]{3}|[0-9a-f]{6})$/i.test(v);
+}
+
+/** Always returns lowercase 6-digit `#rrggbb` when input is valid hex. */
+export function normalizeHexColor(hex: string): string {
+  if (!isHexColor(hex)) return hex;
+  let h = hex.trim().toLowerCase();
+  if (h.length === 4) {
+    h = `#${h[1]}${h[1]}${h[2]}${h[2]}${h[3]}${h[3]}`;
+  }
+  return h;
 }
 
 /**

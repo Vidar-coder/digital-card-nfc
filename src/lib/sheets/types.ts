@@ -198,7 +198,20 @@ export interface SheetContactAction extends Timestamps {
 export interface SheetTheme extends Timestamps {
   theme_id: string | null;
   user_id: string;
-  theme_name: "minimal" | "corporate" | "elegant" | "modern" | "dark" | "glass" | "creative" | "custom";
+  theme_name:
+    | "minimal"
+    | "corporate"
+    | "elegant"
+    | "modern"
+    | "dark"
+    | "glass"
+    | "creative"
+    | "executive"
+    | "midnight"
+    | "slate"
+    | "luxury"
+    | "navy"
+    | "custom";
   primary_color: string;
   secondary_color: string;
   accent_color: string;

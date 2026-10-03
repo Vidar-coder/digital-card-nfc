@@ -116,6 +116,45 @@ body {
   .p-card { transition: none; }
 }
 
+/* Dashboard live preview — scale 390×844 phone to fit panel */
+.phone-preview-stage {
+  container-type: size;
+  background:
+    radial-gradient(ellipse 80% 60% at 50% 40%, rgb(255 255 255 / 0.9), transparent),
+    linear-gradient(180deg, rgb(244 244 245) 0%, rgb(228 228 231) 100%);
+}
+.phone-preview-scale {
+  transform: scale(min(1, 100cqw / 390px, 100cqh / 844px));
+  transform-origin: center center;
+}
+
+/* Public card — phone preview + real mobile polish */
+.profile-root[data-phone-preview] {
+  --p-mobile-pad-x: 1rem;
+}
+.profile-root[data-phone-preview] .profile-scroll {
+  padding-left: var(--p-mobile-pad-x);
+  padding-right: var(--p-mobile-pad-x);
+  padding-top: 0.5rem;
+  padding-bottom: 0.75rem;
+}
+.profile-root[data-phone-preview] .p-card-identity .profile-header-cover {
+  height: 7rem;
+}
+.profile-root[data-phone-preview] .mobile-action-bar {
+  border-top-left-radius: 1.25rem;
+  border-top-right-radius: 1.25rem;
+  box-shadow: 0 -12px 40px -16px rgb(0 0 0 / 0.18);
+}
+
+.profile-root:not([data-phone-preview]) {
+  padding-bottom: env(safe-area-inset-bottom, 0px);
+}
+.profile-root .mobile-action-bar {
+  -webkit-backdrop-filter: blur(20px) saturate(160%);
+  backdrop-filter: blur(20px) saturate(160%);
+}
+
 /* ---------------------------------------------------------------------------
    Rich text editor (dashboard)
    --------------------------------------------------------------------------- */

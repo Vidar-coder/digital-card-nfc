@@ -1,4 +1,4 @@
-import { DEFAULT_THEME } from "../theme";
+import { DEFAULT_THEME, isHexColor, normalizeHexColor, THEME_PRESETS } from "../theme";
 import type {
   AnalyticsEvent,
   AnalyticsEventType,
@@ -114,17 +114,30 @@ const nullIfEmpty = (v: string | null | undefined) => (v ? v : null);
 
 /* ---------------------------- sheets → app ------------------------------ */
 
+const KNOWN_THEME_PRESETS = new Set<string>([...Object.keys(THEME_PRESETS), "custom"]);
+
+function sheetColor(value: string | undefined, fallback: string): string {
+  const raw = value?.trim();
+  if (raw && isHexColor(raw)) return normalizeHexColor(raw);
+  return fallback;
+}
+
+function sheetPreset(name: string | undefined): Theme["preset"] {
+  if (name && KNOWN_THEME_PRESETS.has(name)) return name as Theme["preset"];
+  return DEFAULT_THEME.preset;
+}
+
 export function themeFromSheet(t: SheetTheme | null | undefined): Theme {
   if (!t) return { ...DEFAULT_THEME };
   return {
-    preset: t.theme_name || DEFAULT_THEME.preset,
+    preset: sheetPreset(t.theme_name),
     mode: t.mode || DEFAULT_THEME.mode,
-    primary: t.primary_color || DEFAULT_THEME.primary,
-    secondary: t.secondary_color || DEFAULT_THEME.secondary,
-    accent: t.accent_color || DEFAULT_THEME.accent,
-    background: t.background_color || DEFAULT_THEME.background,
-    text: t.text_color || DEFAULT_THEME.text,
-    button: t.button_color || DEFAULT_THEME.button,
+    primary: sheetColor(t.primary_color, DEFAULT_THEME.primary),
+    secondary: sheetColor(t.secondary_color, DEFAULT_THEME.secondary),
+    accent: sheetColor(t.accent_color, DEFAULT_THEME.accent),
+    background: sheetColor(t.background_color, DEFAULT_THEME.background),
+    text: sheetColor(t.text_color, DEFAULT_THEME.text),
+    button: sheetColor(t.button_color, DEFAULT_THEME.button),
     card_style: t.card_style || DEFAULT_THEME.card_style,
     radius: t.border_radius ?? DEFAULT_THEME.radius,
     font: t.font_family || DEFAULT_THEME.font,
@@ -218,7 +231,12 @@ export function profilePatchToSheet(patch: Partial<ProfileBasics>): ProfileInput
 
 export function themeToSheet(theme: Theme): ThemeInput {
   const out: Record<string, unknown> = {};
-  for (const [key, col] of Object.entries(THEME_FIELD_MAP)) out[col] = theme[key as keyof Theme];
+  const colorKeys = new Set(["primary", "secondary", "accent", "background", "text", "button"]);
+  for (const [key, col] of Object.entries(THEME_FIELD_MAP)) {
+    let v = theme[key as keyof Theme];
+    if (colorKeys.has(key) && typeof v === "string" && isHexColor(v)) v = normalizeHexColor(v);
+    out[col] = v;
+  }
   return out as ThemeInput;
 }
 

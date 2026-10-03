@@ -10,7 +10,12 @@ export type ThemePresetId =
   | "modern"
   | "dark"
   | "glass"
-  | "creative";
+  | "creative"
+  | "executive"
+  | "midnight"
+  | "slate"
+  | "luxury"
+  | "navy";
 
 export type CardStyle = "elevated" | "outlined" | "flat" | "glass";
 export type AvatarShape = "circle" | "rounded" | "square";

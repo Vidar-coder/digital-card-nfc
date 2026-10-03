@@ -12,7 +12,7 @@ export function ProfileHeader({ profile, preview }: Props) {
   const { theme } = profile;
   return (
     <header>
-      <div className="relative h-32 @4xl:h-28">
+      <div className="profile-header-cover relative h-28 @md:h-32 @4xl:h-28">
         {profile.cover_url ? (
           // eslint-disable-next-line @next/next/no-img-element
           <img src={profile.cover_url} alt="" className="size-full object-cover" />
