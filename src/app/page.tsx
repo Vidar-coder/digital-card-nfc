@@ -3,9 +3,11 @@ import {
   BarChart3,
   Check,
   Contact,
+  MapPin,
   MessageCircle,
   Minus,
   Nfc,
+  Package,
   Palette,
   QrCode,
   RefreshCw,
@@ -24,23 +26,36 @@ const PORTFOLIO_URL = "https://lance28-beep.github.io/portfolio-website/";
 const STEPS = [
   {
     step: "1",
-    title: "Message us",
-    text: "Tell us you want a digital card. We confirm your details, username, and what goes on your profile.",
+    title: "Message me",
+    text: "Want to avail? Send a message on Messenger. We’ll confirm your order, promo price, and what goes on your card.",
   },
   {
     step: "2",
     title: "Create your account",
-    text: "Register with the email we set up for you. Your dashboard is where you edit your card anytime.",
+    text: "Register with the email we agree on. Your dashboard is where your live profile and QR are managed.",
   },
   {
     step: "3",
-    title: "Build your profile",
-    text: "Add photo, bio, links, and brand colors. We help until it looks sharp and professional.",
+    title: "We prepare everything",
+    text: "We set up your digital page and print your custom NFC card—programmed to open your profile when tapped.",
   },
   {
     step: "4",
-    title: "Tap and share",
-    text: "Program NFC once. Every tap opens your live page. One tap saves your contact. QR included.",
+    title: "Receive your card",
+    text: "We deliver your card to you, or we can meet up—whichever works best. Then tap, share, and save contacts.",
+  },
+];
+
+const DELIVERY_OPTIONS = [
+  {
+    icon: Package,
+    title: "Print & deliver",
+    text: "Your custom NFC card is printed and programmed for you—we can ship it to your address.",
+  },
+  {
+    icon: MapPin,
+    title: "Meet up",
+    text: "Prefer face to face? Message me and we’ll arrange a meet-up to hand you your card.",
   },
 ];
 
@@ -69,6 +84,7 @@ const WHY_DIGITAL = [
 
 const VS_PAPER = {
   digital: [
+    "Custom NFC card—printed and programmed for you",
     "Updates anytime—no reprint costs",
     "NFC tap + QR for events and desks",
     "Instant “Save contact” on any smartphone",
@@ -136,7 +152,7 @@ function MessengerCta({ size = "lg", className }: { size?: "md" | "lg"; classNam
       className={buttonClasses("primary", size, className)}
     >
       <MessageCircle className="size-4" aria-hidden />
-      Message us now
+      Message me to avail
     </a>
   );
 }
@@ -174,11 +190,11 @@ export default function Home() {
                 NFC digital business cards
               </span>
               <h1 className="mt-6 text-4xl font-semibold tracking-tight text-zinc-950 text-balance sm:text-5xl lg:text-[3.25rem] lg:leading-[1.08]">
-                Share who you are in one tap—not one paper card.
+                Get a custom NFC card—and a digital page that keeps up with you.
               </h1>
               <p className="mx-auto mt-5 max-w-xl text-lg leading-relaxed text-zinc-600 text-pretty lg:mx-0">
-                A premium digital card with NFC and QR: your contact, portfolio, and links on every phone. Look
-                professional, stay current, and make follow-ups effortless.
+                Message me if you want to avail: you&apos;ll receive a custom NFC business card plus your own profile
+                online. Tap to share, one touch to save your contact—portfolio and links included.
               </p>
 
               <div className="mx-auto mt-8 inline-flex flex-col items-stretch gap-4 rounded-2xl border border-indigo-100 bg-gradient-to-br from-white to-indigo-50/50 p-5 text-left shadow-sm sm:flex-row sm:items-center lg:mx-0">
@@ -188,7 +204,9 @@ export default function Home() {
                     Promo
                   </span>
                   <p className="mt-2 text-3xl font-semibold tracking-tight text-zinc-950">{DIGITAL_CARD_PROMO_PRICE}</p>
-                  <p className="mt-1 text-sm text-zinc-600">Digital card setup · NFC-ready profile · QR included</p>
+                  <p className="mt-1 text-sm leading-relaxed text-zinc-600">
+                    Custom NFC card · digital profile · QR · print &amp; deliver or meet-up
+                  </p>
                 </div>
                 <MessengerCta className="shrink-0 px-6 sm:ml-auto" />
               </div>
@@ -199,14 +217,51 @@ export default function Home() {
                 </Link>
               </div>
               <p className="mx-auto mt-4 max-w-md text-sm leading-relaxed text-zinc-600 lg:mx-0">
-                New customer? Message us first—we&apos;ll walk you from order to your first tap.
+                First time ordering? <strong className="font-medium text-zinc-800">Message me first</strong> to avail—we&apos;ll
+                guide you until your custom NFC card is in your hands.
               </p>
             </div>
             <HeroDigitalCard />
           </div>
         </section>
 
-        <section className="border-y border-zinc-100 bg-zinc-50/80">
+        <section className="border-y border-zinc-100 bg-white">
+          <div className="mx-auto max-w-6xl px-5 py-14 sm:py-16">
+            <SectionIntro
+              label="What you receive"
+              title="A custom NFC card—delivered or handoff in person"
+              description="This isn’t only a website link. You get a physical card we print and program for you. Choose delivery or meet-up when you message me."
+            />
+            <div className="grid gap-4 sm:grid-cols-2">
+              {DELIVERY_OPTIONS.map((item) => (
+                <article
+                  key={item.title}
+                  className="rounded-2xl border border-indigo-100 bg-gradient-to-br from-indigo-50/50 to-white p-6"
+                >
+                  <span className="flex size-10 items-center justify-center rounded-xl bg-indigo-50 text-brand">
+                    <item.icon className="size-5" aria-hidden />
+                  </span>
+                  <h3 className="mt-4 font-semibold text-zinc-900">{item.title}</h3>
+                  <p className="mt-2 text-sm leading-relaxed text-zinc-600">{item.text}</p>
+                </article>
+              ))}
+            </div>
+            <p className="mx-auto mt-8 max-w-xl text-center text-sm leading-relaxed text-zinc-600">
+              Ready to avail?{" "}
+              <a
+                href={MESSENGER_ORDER_URL}
+                target="_blank"
+                rel="noopener noreferrer"
+                className="font-medium text-brand underline-offset-4 hover:underline"
+              >
+                Message me on Messenger
+              </a>{" "}
+              and tell us you want your digital card package.
+            </p>
+          </div>
+        </section>
+
+        <section className="border-b border-zinc-100 bg-zinc-50/80">
           <div className="mx-auto max-w-6xl px-5 py-16 sm:py-20">
             <SectionIntro
               label="Why go digital"
@@ -266,7 +321,7 @@ export default function Home() {
           <SectionIntro
             label="Simple process"
             title="How you get started"
-            description="From first message to a card you’re proud to tap—four clear steps."
+            description="Message to avail, we build your page, print your NFC card, then deliver or meet up—simple from start to finish."
           />
           <ol className="grid gap-px overflow-hidden rounded-3xl border border-zinc-200 bg-zinc-200 sm:grid-cols-2 lg:grid-cols-4">
             {STEPS.map((item) => (
@@ -306,7 +361,8 @@ export default function Home() {
           <p className="text-xs font-semibold uppercase tracking-[0.2em] text-brand">Limited promo</p>
           <p className="mt-3 text-4xl font-semibold tracking-tight text-zinc-950">{DIGITAL_CARD_PROMO_PRICE}</p>
           <p className="mx-auto mt-3 max-w-lg text-base leading-relaxed text-zinc-600">
-            Get your digital business card set up with NFC profile, QR, and a dashboard you can update anytime.
+            Message me to avail—you&apos;ll receive a custom NFC card, your digital profile, and a dashboard you can
+            update anytime. We print and deliver, or meet up.
           </p>
           <div className="mt-8 flex flex-col justify-center gap-3 sm:flex-row">
             <MessengerCta className="px-8" />
@@ -334,7 +390,7 @@ export default function Home() {
           </a>
         </p>
         <p className="mx-auto mt-3 max-w-md px-5">
-          Order your digital card — promo {DIGITAL_CARD_PROMO_PRICE}.{" "}
+          Avail your custom NFC card — promo {DIGITAL_CARD_PROMO_PRICE}.{" "}
           <a
             href={MESSENGER_ORDER_URL}
             target="_blank"

@@ -97,7 +97,8 @@ export function ProfileView({ profile, preview, className }: Props) {
         </div>
       </div>
 
-      {/* Thumb-reach action bar for phones (hidden on wide containers) */}
+      {/* Thumb-reach action bar for phones (hidden on wide containers and in dashboard preview) */}
+      {!preview && (
       <div className="sticky bottom-0 z-20 @4xl:hidden">
         <div
           className="mx-auto flex max-w-xl gap-2 border-t border-p-border px-3 pt-3 backdrop-blur-xl"
@@ -133,6 +134,7 @@ export function ProfileView({ profile, preview, className }: Props) {
           )}
         </div>
       </div>
+      )}
     </div>
   );
 }

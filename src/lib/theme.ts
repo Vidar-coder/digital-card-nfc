@@ -94,19 +94,19 @@ export const THEME_PRESETS: Record<ThemePresetId, { label: string; description: 
   },
   glass: {
     label: "Glassmorphism",
-    description: "Frosted cards on deep color",
+    description: "Dark luxury glass—matches your NFC card vibe",
     theme: {
       preset: "glass",
       mode: "dark",
-      primary: "#a78bfa",
-      secondary: "#22d3ee",
-      accent: "#f472b6",
-      background: "#14112b",
-      text: "#f3f1ff",
-      button: "#8b5cf6",
+      primary: "#e8dcc0",
+      secondary: "#7c3aed",
+      accent: "#4f46e5",
+      background: "#0a0a0f",
+      text: "#f5f5f5",
+      button: "#4f46e5",
       card_style: "glass",
-      radius: 22,
-      font: "jakarta",
+      radius: 16,
+      font: "playfair",
       avatar_shape: "circle",
     },
   },
@@ -130,7 +130,7 @@ export const THEME_PRESETS: Record<ThemePresetId, { label: string; description: 
   },
 };
 
-export const DEFAULT_THEME: Theme = THEME_PRESETS.modern.theme;
+export const DEFAULT_THEME: Theme = THEME_PRESETS.glass.theme;
 
 export const FONT_OPTIONS: { id: FontId; label: string; cssVar: string }[] = [
   { id: "inter", label: "Inter", cssVar: "var(--font-inter)" },
