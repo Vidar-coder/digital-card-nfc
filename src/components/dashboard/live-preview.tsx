@@ -6,45 +6,64 @@ import { ProfileView } from "@/components/profile/profile-view";
 import { cn } from "@/lib/utils";
 import { useDashboard } from "./dashboard-context";
 
-function PhoneStatusBar() {
+function PhoneStatusBar({ dark }: { dark?: boolean }) {
   return (
     <div
-      className="relative z-10 flex h-11 shrink-0 items-end justify-between px-6 pb-1.5 text-[11px] font-semibold text-white"
+      className={cn(
+        "relative z-10 flex h-12 shrink-0 items-end justify-between px-7 pb-1 text-[11px] font-semibold",
+        dark ? "text-white" : "text-zinc-900",
+      )}
       aria-hidden
     >
       <span>9:41</span>
       <div className="flex items-center gap-1.5 opacity-90">
         <Signal className="size-3.5" strokeWidth={2.5} />
         <Wifi className="size-3.5" strokeWidth={2.5} />
-        <span className="ml-0.5 inline-block h-2.5 w-5 rounded-[3px] border border-white/90 p-px">
-          <span className="block h-full w-[70%] rounded-[1px] bg-white" />
+        <span
+          className={cn(
+            "ml-0.5 inline-block h-2.5 w-5 rounded-[3px] border p-px",
+            dark ? "border-white/90" : "border-zinc-900/80",
+          )}
+        >
+          <span className={cn("block h-full w-[70%] rounded-[1px]", dark ? "bg-white" : "bg-zinc-900")} />
         </span>
       </div>
     </div>
   );
 }
 
-function PhoneChrome({ children }: { children: React.ReactNode }) {
+function PhoneChrome({ children, darkScreen }: { children: React.ReactNode; darkScreen?: boolean }) {
   return (
-    <div className="mx-auto flex h-full max-h-[min(720px,calc(100vh-12rem))] w-full max-w-[300px] flex-col justify-center py-1">
-      <div className="relative flex min-h-0 flex-1 flex-col rounded-[2.75rem] bg-gradient-to-b from-zinc-700 to-zinc-900 p-[3px] shadow-[0_24px_48px_-12px_rgba(0,0,0,0.45)] ring-1 ring-zinc-950/20">
-        <div className="pointer-events-none absolute -left-[2px] top-[28%] h-14 w-[3px] rounded-l bg-zinc-800" aria-hidden />
-        <div className="pointer-events-none absolute -left-[2px] top-[42%] h-10 w-[3px] rounded-l bg-zinc-800" aria-hidden />
-        <div className="pointer-events-none absolute -right-[2px] top-[34%] h-16 w-[3px] rounded-r bg-zinc-800" aria-hidden />
+    <div className="mx-auto flex h-full w-full max-w-[320px] flex-col justify-center py-2">
+      {/* Metallic outer shell */}
+      <div className="relative flex min-h-0 flex-1 flex-col rounded-[3rem] bg-gradient-to-b from-zinc-300 via-zinc-200 to-zinc-400 p-[2px] shadow-[0_28px_56px_-16px_rgba(0,0,0,0.35)]">
+        {/* Side buttons */}
+        <div
+          className="pointer-events-none absolute -left-[3px] top-[22%] z-10 h-7 w-[3px] rounded-l-sm bg-zinc-400"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute -left-[3px] top-[30%] z-10 h-12 w-[3px] rounded-l-sm bg-zinc-400"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute -left-[3px] top-[40%] z-10 h-12 w-[3px] rounded-l-sm bg-zinc-400"
+          aria-hidden
+        />
+        <div
+          className="pointer-events-none absolute -right-[3px] top-[32%] z-10 h-16 w-[3px] rounded-r-sm bg-zinc-400"
+          aria-hidden
+        />
 
-        <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[2.5rem] bg-black">
-          <div
-            className="pointer-events-none absolute left-1/2 top-2.5 z-20 h-[26px] w-[108px] -translate-x-1/2 rounded-full bg-black ring-1 ring-white/10"
-            aria-hidden
-          />
-          <PhoneStatusBar />
-          <div className="min-h-0 flex-1 overflow-hidden">
-            <div className="h-full overflow-y-auto overflow-x-hidden overscroll-contain [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden">
-              {children}
-            </div>
-          </div>
-          <div className="flex shrink-0 justify-center pb-2 pt-1" aria-hidden>
-            <div className="h-1 w-[34%] min-w-[96px] max-w-[120px] rounded-full bg-white/35" />
+        {/* Black bezel */}
+        <div className="flex min-h-0 flex-1 flex-col rounded-[2.9rem] bg-black p-3">
+          <div className="relative flex min-h-0 flex-1 flex-col overflow-hidden rounded-[2.15rem] bg-black">
+            <div
+              className="pointer-events-none absolute left-1/2 top-3 z-30 h-[30px] w-[112px] -translate-x-1/2 rounded-full bg-black ring-1 ring-white/10"
+              aria-hidden
+            />
+            <PhoneStatusBar dark={darkScreen} />
+            <div className="relative min-h-0 flex-1 overflow-hidden">{children}</div>
           </div>
         </div>
       </div>
@@ -57,9 +76,10 @@ export function LivePreview({ className }: { className?: string }) {
   const { draft, saved, isDirty } = useDashboard();
   const [device, setDevice] = useState<"mobile" | "desktop">("mobile");
   const unsaved = isDirty(Object.keys(draft) as (keyof typeof draft)[]);
+  const darkScreen = draft.theme.mode === "dark";
 
   return (
-    <div className={cn("flex h-full flex-col bg-zinc-200/40", className)}>
+    <div className={cn("flex h-full flex-col bg-zinc-200/50", className)}>
       <div className="flex items-center justify-between gap-2 border-b border-zinc-200/80 bg-white/80 px-4 py-3 backdrop-blur-sm">
         <div className="flex items-center gap-2">
           <span className="relative flex size-2">
@@ -100,10 +120,10 @@ export function LivePreview({ className }: { className?: string }) {
         </div>
       </div>
 
-      <div className="flex min-h-0 flex-1 items-stretch justify-center overflow-hidden p-4">
+      <div className="flex min-h-0 flex-1 items-stretch justify-center overflow-hidden p-3 sm:p-4">
         {device === "mobile" ? (
-          <PhoneChrome>
-            <ProfileView profile={draft} preview className="min-h-full @container" />
+          <PhoneChrome darkScreen={darkScreen}>
+            <ProfileView profile={draft} preview phonePreview className="h-full min-h-0" />
           </PhoneChrome>
         ) : (
           <div className="flex h-full w-full min-h-0 flex-col overflow-hidden rounded-xl bg-zinc-900 p-1.5 shadow-lg ring-1 ring-zinc-900/10">

@@ -23,6 +23,8 @@ interface Props {
   profile: FullProfile;
   /** Rendered inside the dashboard live preview: inert links, no analytics. */
   preview?: boolean;
+  /** Dashboard phone frame: fixed bottom bar + home indicator like a real device. */
+  phonePreview?: boolean;
   className?: string;
 }
 
@@ -31,13 +33,65 @@ interface Props {
  * variants) rather than viewport breakpoints so the exact same component
  * renders correctly full-screen and inside the dashboard's phone preview.
  */
-export function ProfileView({ profile, preview, className }: Props) {
-  const { theme } = profile;
+function MobileThumbBar({ profile, preview, docked }: { profile: FullProfile; preview?: boolean; docked?: boolean }) {
   const tel = phoneHref(profile.phone);
+  return (
+    <div className={cn("z-20 @4xl:hidden", docked ? "shrink-0" : "sticky bottom-0")}>
+      <div
+        className="mx-auto flex max-w-xl gap-2 border-t border-p-border px-3 pt-3 backdrop-blur-xl"
+        style={{
+          background: "color-mix(in srgb, var(--p-bg) 82%, transparent)",
+          paddingBottom: docked ? "0.5rem" : "max(0.75rem, env(safe-area-inset-bottom))",
+        }}
+      >
+        <SaveContactButton username={profile.username} preview={preview} className="flex-1" />
+        {tel && (
+          <TrackedLink
+            href={`tel:${tel}`}
+            username={profile.username}
+            event="phone_click"
+            preview={preview}
+            aria-label="Call"
+            className="p-btn flex size-12 items-center justify-center border border-p-border bg-p-surface text-p-primary"
+          >
+            <Phone className="size-5" />
+          </TrackedLink>
+        )}
+        {profile.email && (
+          <TrackedLink
+            href={`mailto:${profile.email}`}
+            username={profile.username}
+            event="email_click"
+            preview={preview}
+            aria-label="Email"
+            className="p-btn flex size-12 items-center justify-center border border-p-border bg-p-surface text-p-primary"
+          >
+            <Mail className="size-5" />
+          </TrackedLink>
+        )}
+      </div>
+      {docked ? (
+        <div className="flex justify-center pb-2 pt-1" aria-hidden>
+          <div
+            className="h-1 w-[36%] min-w-[100px] max-w-[128px] rounded-full"
+            style={{ background: "color-mix(in srgb, var(--p-text) 35%, transparent)" }}
+          />
+        </div>
+      ) : null}
+    </div>
+  );
+}
+
+export function ProfileView({ profile, preview, phonePreview, className }: Props) {
+  const { theme } = profile;
 
   return (
     <div
-      className={cn("profile-root @container relative isolate min-h-full overflow-x-clip", className)}
+      className={cn(
+        "profile-root @container relative isolate overflow-x-clip",
+        phonePreview ? "flex h-full min-h-0 flex-col" : "min-h-full",
+        className,
+      )}
       data-mode={theme.mode}
       data-card={theme.card_style}
       style={themeToStyle(theme)}
@@ -50,7 +104,13 @@ export function ProfileView({ profile, preview, className }: Props) {
         </div>
       )}
 
-      <div className="mx-auto w-full max-w-6xl px-3 pt-3 pb-6 @md:px-5 @md:pt-6 @4xl:px-8 @4xl:pt-12 @4xl:pb-16">
+      <div
+        className={cn(
+          "mx-auto w-full max-w-6xl px-3 pt-3 pb-6 @md:px-5 @md:pt-6 @4xl:px-8 @4xl:pt-12 @4xl:pb-16",
+          phonePreview &&
+            "min-h-0 flex-1 overflow-y-auto overflow-x-hidden pb-4 [-ms-overflow-style:none] [scrollbar-width:none] [&::-webkit-scrollbar]:hidden",
+        )}
+      >
         <div className="@4xl:grid @4xl:grid-cols-[380px_minmax(0,1fr)] @4xl:items-start @4xl:gap-8">
           {/* Identity card — the "business card" */}
           <aside className="@4xl:sticky @4xl:top-8">
@@ -97,44 +157,7 @@ export function ProfileView({ profile, preview, className }: Props) {
         </div>
       </div>
 
-      {/* Thumb-reach action bar for phones (hidden on wide containers and in dashboard preview) */}
-      {!preview && (
-      <div className="sticky bottom-0 z-20 @4xl:hidden">
-        <div
-          className="mx-auto flex max-w-xl gap-2 border-t border-p-border px-3 pt-3 backdrop-blur-xl"
-          style={{
-            background: "color-mix(in srgb, var(--p-bg) 82%, transparent)",
-            paddingBottom: "max(0.75rem, env(safe-area-inset-bottom))",
-          }}
-        >
-          <SaveContactButton username={profile.username} preview={preview} className="flex-1" />
-          {tel && (
-            <TrackedLink
-              href={`tel:${tel}`}
-              username={profile.username}
-              event="phone_click"
-              preview={preview}
-              aria-label="Call"
-              className="p-btn flex size-12 items-center justify-center border border-p-border bg-p-surface text-p-primary"
-            >
-              <Phone className="size-5" />
-            </TrackedLink>
-          )}
-          {profile.email && (
-            <TrackedLink
-              href={`mailto:${profile.email}`}
-              username={profile.username}
-              event="email_click"
-              preview={preview}
-              aria-label="Email"
-              className="p-btn flex size-12 items-center justify-center border border-p-border bg-p-surface text-p-primary"
-            >
-              <Mail className="size-5" />
-            </TrackedLink>
-          )}
-        </div>
-      </div>
-      )}
+      <MobileThumbBar profile={profile} preview={preview} docked={phonePreview} />
     </div>
   );
 }
